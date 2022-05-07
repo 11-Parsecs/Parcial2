@@ -1,0 +1,5 @@
+Txt="Ingrese {}"
+Txt1="la cantidad de productos que va a vender: "
+Txt2="el nombre de cada producto: "
+Txt3="el precio de cada uno: "
+Txt4="el descuento hecho si se compran más de diez: "
