@@ -1,4 +1,8 @@
-Txt0="Ingrese {}"
+################################
+#Parcial F - Juan Pablo Guevara Marulanda 
+################################
+
+Txt0="Ingrese {}" #Se escriben como variables todos los textos que se usarán en el código para evitar el Hard Coding
 
 Txt1 ="los productos que va a vender: "
 Txt2 ="el nombre del producto {}: "
@@ -18,82 +22,151 @@ Valor con IVA: ${}
 Descuento:     ${}
 Total:         ${}'''
 
-s=''' '''
-
 Txt12="El mayor descuento lo obtuvo {}."
 Txt13="La orden más cara fue hecha por {}."
 
-################################
+Txt14="Ese producto no estaba a la venta."
+Txt15="Debe ser un número entero positivo."
+Txt16="Los precios y el descuento deben ser números enteros positivos."
+
+Espacio=''' '''
 
 ################################
-
-print(s)
-N=input(Txt0.format(Txt1))
-print(s)
-
-Producto=""
-n={}
-p=0
-
-for i in range(1,eval(N)+1):
-    p+=1
-    Producto=input(Txt0.format(Txt2.format(p)))
-    Precio=input(Txt0.format(Txt3))
-    Descuento=input(Txt0.format(Txt4))
-    n[Producto]=(Precio,Descuento)
-    print(s)
-
+#Función para ingresar los productos a vender
 ################################
 
+def Productos():
+
+    '''
+    La función Productos permite registrar una serie de productos y las retorna en un diccionario de la forma:
+    {Nombre del producto:(Precio del producto,Descuento si se compran más de diez))}
+    '''
+    
+    print(Espacio)
+
+    while True: #Se repite hasta que el número ingresado sea un entero positivo
+        try:
+            N=int(input(Txt0.format(Txt1)))
+            if N>0:
+                print(Espacio)
+                break
+            print(Txt15)
+        except:
+            print(Txt15)
+            print(Espacio)
+
+    Producto=""
+    Almacen={}
+    Cuenta=0
+
+    for i in range(1,N+1):
+        Cuenta+=1
+        while True:
+            try:
+                Producto=input(Txt0.format(Txt2.format(Cuenta)))
+                Precio=input(Txt0.format(Txt3))
+                Descuento=input(Txt0.format(Txt4))
+                Almacen[Producto.lower()]=(int(Precio),int(Descuento)) #Asiga la tupla (Precio,Descuento) al nombre del producto en un diccionario
+                print(Espacio)
+                break
+            except:
+                print(Txt16)
+                print(Espacio)
+
+    return(Almacen)
+
+################################
+#Función para registrar los clientes del día
 ################################
 
-print(s)
-M=input(Txt0.format(Txt5))
+def Clientes(Almacen):
 
-Nombre=""
-Producto=""
-Precio=0
-Total=0
-Nombres=[]
-m=[]
-Descuento=[]
-q=0
-k=0
+    '''
+    La función Clientes permite registrar una serie de personas y lo que compraron del diccionario Almacen y retorna un diccionario de la forma:
+    {Nombre del cliente:(Precio total,Descuento))}
+    Además, indica cual cliente tuvo el descuento más alto, y cual cliente tuvo la compra más cara.
+    '''
 
-for i in range(1,eval(M)+1):
+    print(Espacio)
+
+    while True: #Se repite hasta que el número ingresado sea un entero positivo
+        try:
+            M=int(input(Txt0.format(Txt5)))
+            if M>0:
+                print(Espacio)
+                break
+            print(Txt15)
+        except:
+            print(Txt15)
+
+    Nombre=""
+    Producto=""
     Precio=0
     Total=0
-    q+=1
+    Nombres=[]
+    Precios=[]
+    Descuento=[]
+    Registro={}
+    Cuenta=0
 
-    print(Txt6.format(q))
-    Nombre=input(Txt7)
+    for i in range(1,M+1):
+        Precio=0
+        Total=0
+        Cuenta+=1
 
-    P=input(Txt0.format(Txt8))
+        print(Txt6.format(Cuenta))
+        Nombre=input(Txt7)
 
-    for j in range(1,eval(P)+1):
-        print(s)
-        Producto=input(Txt9)
-        Cantidad=input(Txt10) 
+        P=eval(input(Txt0.format(Txt8)))
 
-        Precio+=eval(n[Producto][0])*eval(Cantidad)  
+        for j in range(1,P+1):
 
-        if eval(Cantidad)>10:
-            Total+=eval(n[Producto][0])*eval(Cantidad)*1.19*(100-eval(n[Producto][1]))/100
-        else:
-            Total+=eval(n[Producto][0])*eval(Cantidad)*1.19 
+            print(Espacio)
 
-    print(s)
-    print(Txt11.format(Precio,Precio*1.19,abs(Precio*1.19-Total),Total))
-    print(s)
+            while True:
 
-    Nombres.append(Nombre)
-    m.append(Total)
-    Descuento.append(Precio-Total)
+                try:
+                    Producto=input(Txt9).lower()
+                    Cantidad=int(input(Txt10))
+                    Precio+=Almacen[Producto][0]*Cantidad  #LLama al precio del diccionario a través del nombre del producto
 
-C=m.index(max(m))
-D=Descuento.index(max(Descuento))
+                    if Cantidad>10:
+                        Total+=Almacen[Producto][0]*Cantidad*1.19*(100-Almacen[Producto][1])/100
+                    else:
+                        Total+=Almacen[Producto][0]*Cantidad*1.19 
+                
+                    break
 
-print(Txt12.format(Nombres[D]))
-print(s)
-print(Txt13.format(Nombres[C]))
-print(s)
+                except ValueError:
+                    print(Txt15)
+                    print(Espacio)
+                except KeyError:
+                    print(Txt14)
+                    print(Espacio)
+
+        print(Espacio)
+        print(Txt11.format(Precio,Precio*1.19,abs(Precio*1.19-Total),Total))
+        print(Espacio)
+
+        Nombres.append(Nombre)
+        Precios.append(Total)
+        Descuento.append(Precio-Total)
+
+        Registro[Nombre]=(Total,Precio-Total) #Asiga la tupla (Precio Total,Descuento Total) al nombre del cliente en un diccionario
+
+    Mayor_Descuento_Pos=Descuento.index(max(Descuento))
+    Mayor_Precio_Pos=Precios.index(max(Precios))
+
+    print(Txt12.format(Nombres[Mayor_Descuento_Pos]))
+    print(Espacio)
+    print(Txt13.format(Nombres[Mayor_Precio_Pos]))
+    print(Espacio)
+
+    return(Registro)
+
+################################
+#Llamando las funciones
+################################
+
+Almacen=Productos()
+Ventas=Clientes(Almacen)
