@@ -1,4 +1,4 @@
-# Parcia 2
+# Parcial 2
 ## Parcial F
 ### Juan Pablo Guevara
 
